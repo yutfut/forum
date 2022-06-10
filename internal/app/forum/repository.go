@@ -22,7 +22,6 @@ func (r *RepoPgx) CreateForum(newForum models.ForumRequestDelivery) (forum model
 		returning "title", "user", "slug", "posts", "threads";`,
 		newForum.Title, newForum.User, newForum.Slug,
 	).Scan(&forum.Title, &forum.User, &forum.Slug, &forum.Posts, &forum.Threads)
-
 	return
 }
 
@@ -33,7 +32,6 @@ func (r *RepoPgx) GetForumBySlug(slug string) (forum models.ForumResponse, err e
 		where "slug" = $1;`,
 		slug,
 	).Scan(&forum.Id, &forum.Title, &forum.User, &forum.Slug, &forum.Posts, &forum.Threads)
-
 	return
 }
 
@@ -83,7 +81,6 @@ func (r *RepoPgx) CreateThread(newThread models.ThreadsRequest) (thread models.T
 		&thread.Votes,
 		&thread.Slug,
 		&thread.Created)
-
 	return
 }
 
@@ -126,7 +123,6 @@ func (r *RepoPgx) GetForumThreads(slug, limit, since, desc string) ([]models.Thr
 
 		threads = append(threads, thread)
 	}
-
 	return threads, nil
 }
 
@@ -190,6 +186,5 @@ func (r *RepoPgx) GetUsers(forum models.ForumResponse, limit, since, desc string
 
 		users = append(users, user)
 	}
-
 	return users, nil
 }

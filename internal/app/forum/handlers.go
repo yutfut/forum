@@ -61,12 +61,10 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 
 func (h *Handlers) GetForumDetails(ctx *fasthttp.RequestCtx) {
 	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
-
 	checkForum, err := h.ForumRepo.GetForumBySlug(slug)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find forum")})
-		//body, _ := json.Marshal(checkForum)
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return

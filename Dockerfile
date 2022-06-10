@@ -15,7 +15,7 @@ USER postgres
 
 RUN /etc/init.d/postgresql start &&\
     psql --command "CREATE USER yutfut WITH SUPERUSER PASSWORD 'example';" &&\
-    createdb -O yutfut forum &&\
+    createdb -O yutfut db &&\
     /etc/init.d/postgresql stop
 
 EXPOSE 5432
@@ -29,4 +29,4 @@ COPY --from=build /app/main/ .
 
 EXPOSE 5000
 ENV PGPASSWORD example
-CMD service postgresql start && psql -h localhost -d forum -U yutfut -p 5432 -a -q -f ./db/db.sql && ./main
+CMD service postgresql start && psql -h localhost -d db -U yutfut -p 5432 -a -q -f ./db/db.sql && ./main
