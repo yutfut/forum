@@ -131,8 +131,8 @@ create trigger "create_thread"
     execute procedure create_thread();
 
 create unlogged table if not exists "forum_user" (
-    "id"    BIGSERIAL                      NOT NULL PRIMARY KEY,
-    "user"  BIGINT REFERENCES "user" (id)  NOT NULL,
-    "forum" BIGINT REFERENCES "forum" (id) NOT NULL
+    "id"    bigserial                           not null primary key,
+    "user"  bigint      references "user" (id)  not null,
+    "forum" bigint      references "forum" (id) not null
 );
 
