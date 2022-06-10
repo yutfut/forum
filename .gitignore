@@ -1,0 +1,27 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.html
+
+
+# Test binary, built with go test -c
+*.test
+*/technopark-dbms-forum
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+.idea
+.vscode
+.DS_Store
+
+
+*/report.html
+go.sum
+*/models_easyjson.go
+
+docker-compose.yml
+technopark-dbms-forum
+tech-db-forum.dat.gz
