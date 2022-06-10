@@ -3,8 +3,7 @@ package thread
 import "example.com/greetings/internal/app/models"
 
 type ThreadRep interface {
-	GetForumThreadBySlug(slug string) (thread models.ThreadResponse, err error)
-	GetForumThreadById(id int) (thread models.ThreadResponse, err error)
+	GetForumThreadBySlugOrId(slug string) (thread models.ThreadResponse, err error)
 	CheckPostAuthor(author string) (err error)
 	CheckPostByIdAndParent(parent, id int) (err error)
 	CreatePost(thread models.ThreadResponse, newPost models.PostsRequest) (response *models.PostsResponse, err error)

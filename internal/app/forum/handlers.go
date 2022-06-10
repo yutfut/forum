@@ -15,7 +15,6 @@ type Handlers struct {
 
 func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	var forum models.ForumRequestDelivery
-
 	err := json.Unmarshal(ctx.PostBody(), &forum)
 	if err != nil {
 		ctx.SetContentType("application/json")

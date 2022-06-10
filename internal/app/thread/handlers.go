@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/valyala/fasthttp"
 	"net/http"
-	"strconv"
 )
 
 type Handlers struct {
@@ -14,28 +13,18 @@ type Handlers struct {
 }
 
 func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
-	var thread models.ThreadResponse
 	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread1, err1 := h.ThreadRepo.GetForumThreadBySlug(slugOrId)
-	id, _ := strconv.Atoi(slugOrId)
-	thread2, err2 := h.ThreadRepo.GetForumThreadById(id)
-	if err1 != nil && err2 != nil {
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
-	} else {
-		if err1 == nil {
-			thread = thread1
-		}
-		if err2 == nil {
-			thread = thread2
-		}
 	}
 
 	var posts models.PostsRequest
-	err := json.Unmarshal(ctx.PostBody(), &posts.Posts)
+	err = json.Unmarshal(ctx.PostBody(), &posts.Posts)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
@@ -90,28 +79,18 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
-	var thread models.ThreadResponse
 	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread1, err1 := h.ThreadRepo.GetForumThreadBySlug(slugOrId)
-	id, _ := strconv.Atoi(slugOrId)
-	thread2, err2 := h.ThreadRepo.GetForumThreadById(id)
-	if err1 == nil && err2 == nil {
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
-	} else {
-		if err1 == nil {
-			thread = thread1
-		}
-		if err2 == nil {
-			thread = thread2
-		}
 	}
 
 	var vote models.VoteRequest
-	err := json.Unmarshal(ctx.PostBody(), &vote)
+	err = json.Unmarshal(ctx.PostBody(), &vote)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(err.Error())
@@ -165,24 +144,14 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
-	var thread models.ThreadResponse
 	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread1, err1 := h.ThreadRepo.GetForumThreadBySlug(slugOrId)
-	id, _ := strconv.Atoi(slugOrId)
-	thread2, err2 := h.ThreadRepo.GetForumThreadById(id)
-	if err1 != nil && err2 != nil {
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
-	} else {
-		if err1 == nil {
-			thread = thread1
-		}
-		if err2 == nil {
-			thread = thread2
-		}
 	}
 
 	ctx.SetContentType("application/json")
@@ -192,24 +161,14 @@ func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
-	var thread models.ThreadResponse
 	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread1, err1 := h.ThreadRepo.GetForumThreadBySlug(slugOrId)
-	id, _ := strconv.Atoi(slugOrId)
-	thread2, err2 := h.ThreadRepo.GetForumThreadById(id)
-	if err1 != nil && err2 != nil {
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
-	} else {
-		if err1 == nil {
-			thread = thread1
-		}
-		if err2 == nil {
-			thread = thread2
-		}
 	}
 
 	limit := fmt.Sprintf("%s", ctx.FormValue("limit"))
@@ -245,28 +204,18 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
-	var thread models.ThreadResponse
 	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread1, err1 := h.ThreadRepo.GetForumThreadBySlug(slugOrId)
-	id, _ := strconv.Atoi(slugOrId)
-	thread2, err2 := h.ThreadRepo.GetForumThreadById(id)
-	if err1 == nil && err2 == nil {
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
-	} else {
-		if err1 == nil {
-			thread = thread1
-		}
-		if err2 == nil {
-			thread = thread2
-		}
 	}
 
 	var updateThread models.UpdateThreadsRequest
-	err := json.Unmarshal(ctx.PostBody(), &updateThread)
+	err = json.Unmarshal(ctx.PostBody(), &updateThread)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(err.Error())

@@ -5,6 +5,7 @@ import (
 	"example.com/greetings/internal/app/models"
 	"fmt"
 	"github.com/jackc/pgx"
+	"strconv"
 	"time"
 )
 
@@ -16,41 +17,23 @@ func NewPgxRepository(db *pgx.ConnPool) *RepoPgx {
 	return &RepoPgx{DB: db}
 }
 
-func (r *RepoPgx) GetForumThreadBySlug(slug string) (thread models.ThreadResponse, err error) {
+func (r *RepoPgx) GetForumThreadBySlugOrId(slug string) (thread models.ThreadResponse, err error) {
+	id, _ := strconv.Atoi(slug)
 	err = r.DB.QueryRow(
 		`select "id", "title", "author", "forum", "message", "votes", "slug", "created" 
 			from "thread" 
-			where "slug" = $1;`,
-			slug,
-			).Scan(
-				&thread.Id,
-				&thread.Title,
-				&thread.Author,
-				&thread.Forum,
-				&thread.Message,
-				&thread.Votes,
-				&thread.Slug,
-				&thread.Created,
-			)
-	return
-}
-
-func (r *RepoPgx) GetForumThreadById(id int) (thread models.ThreadResponse, err error) {
-	err = r.DB.QueryRow(
-		`select "id", "title", "author", "forum", "message", "votes", "slug", "created" 
-			from "thread" 
-			where "id" = $1;`,
-			id,
-			).Scan(
-				&thread.Id,
-				&thread.Title,
-				&thread.Author,
-				&thread.Forum,
-				&thread.Message,
-				&thread.Votes,
-				&thread.Slug,
-				&thread.Created,
-			)
+			where "slug" = $1 or "id" = $2;`,
+		slug, id,
+	).Scan(
+		&thread.Id,
+		&thread.Title,
+		&thread.Author,
+		&thread.Forum,
+		&thread.Message,
+		&thread.Votes,
+		&thread.Slug,
+		&thread.Created,
+	)
 	return
 }
 
