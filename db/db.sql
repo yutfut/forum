@@ -158,3 +158,9 @@ create index if not exists idxex_vote_by_user_thread on vote (user, thread);
 --  WHERE "email" = $1;`
 drop index if exists idxex_user_by_email;
 create unique   index if not exists idx_user_by_email on users using hash (email);
+
+-- `select "title", "user", "slug", "posts", "threads"
+-- from "forum"
+-- where "slug" = $1;`
+drop index if exists idxex_forum_by_slug;
+create unique   index if not exists idxex_forum_by_slug on forum using hash (slug);
