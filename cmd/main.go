@@ -48,8 +48,11 @@ func main() {
 	})
 
 	if err != nil {
+		fmt.Println("db error")
+		fmt.Println(err.Error())
 		log.Fatalf("Error %s occurred during connection to database", err)
 	}
+	fmt.Println("db connect done")
 
 	user.SetServiceRouting(r, &user.Handlers{
 		UserRepo: user.NewPgxRepository(db),
@@ -70,6 +73,6 @@ func main() {
 	service.SetServiceRouting(r, &service.Handlers{
 		ServiceRepo: service.NewPgxRepository(db),
 	})
-
-	log.Fatal(fasthttp.ListenAndServe("127.0.0.1:5000", r.Handler))
+	fmt.Printf("Start server on port :5000")
+	log.Fatal(fasthttp.ListenAndServe(":5000", r.Handler))
 }
