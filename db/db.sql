@@ -137,10 +137,10 @@ create unlogged table if not exists "forum_user" (
 );
 
 drop index if exists idxex_user_by_nickname;
-create unique   index if not exists idx_user_by_nickname on users    using hash (nickname);
+create unique   index if not exists idx_user_by_nickname on users using hash (nickname);
 
 drop index if exists idxex_thread_by_id_slug;
-create index if not exists idxex_thread_by_id_slug on thread using hash (id, slug);
+create index if not exists idxex_thread_by_id_slug on thread (slug, id);
 
 drop index if exists idxex_vote_by_user_thread;
 create index if not exists idxex_vote_by_user_thread on vote (thread, user);
