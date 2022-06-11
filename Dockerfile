@@ -14,8 +14,8 @@ RUN apt-get -y update && apt-get install -y postgresql-12
 USER postgres
 
 RUN /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER yutfut WITH SUPERUSER PASSWORD 'example';" &&\
-    createdb -O yutfut db &&\
+    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
+    createdb -O docker docker &&\
     /etc/init.d/postgresql stop
 
 EXPOSE 5432
@@ -28,7 +28,7 @@ COPY . .
 COPY --from=build /app/main/ .
 
 EXPOSE 5000
-ENV PGPASSWORD example
+ENV PGPASSWORD docker
 CMD service postgresql start &&\
- psql -h localhost -d db -U yutfut -p 5432 -a -q -f ./db/db.sql &&\
+ psql -h localhost -d docker -U docker -p 5432 -a -q -f ./db/db.sql &&\
  ./main
