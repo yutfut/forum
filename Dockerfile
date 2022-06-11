@@ -1,4 +1,4 @@
-FROM golang:1.15 AS build
+FROM golang:latest AS build
 
 ADD . /app
 WORKDIR /app
@@ -29,4 +29,6 @@ COPY --from=build /app/main/ .
 
 EXPOSE 5000
 ENV PGPASSWORD example
-CMD service postgresql start && psql -h localhost -d db -U yutfut -p 5432 -a -q -f ./db/db.sql && ./main
+CMD service postgresql start &&\
+ psql -h localhost -d db -U yutfut -p 5432 -a -q -f ./db/db.sql &&\
+ ./main

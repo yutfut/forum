@@ -135,4 +135,3 @@ create unlogged table if not exists "forum_user" (
     "user"  bigint      references "user" (id)  not null,
     "forum" bigint      references "forum" (id) not null
 );
-

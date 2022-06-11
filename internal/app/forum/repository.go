@@ -126,26 +126,6 @@ func (r *RepoPgx) GetForumThreads(slug, limit, since, desc string) ([]models.Thr
 	return threads, nil
 }
 
-func (r *RepoPgx) CheckPostById(id int) (err error) {
-	err = r.DB.QueryRow(
-		`select "id" 
-		from "post" 
-		where "id" = $1;`,
-		id,
-	).Scan(&id)
-	return
-}
-
-func (r *RepoPgx) CheckPostByParent(parent int) (err error) {
-	err = r.DB.QueryRow(
-		`select "id" 
-		from "post" 
-		where "thread" = $1;`,
-		parent,
-	).Scan(&parent)
-	return
-}
-
 func (r *RepoPgx) GetUsers(forum models.ForumResponse, limit, since, desc string) ([]models.User, error) {
 	users := make([]models.User, 0)
 

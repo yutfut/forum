@@ -25,3 +25,4 @@ go.sum
 docker-compose.yml
 technopark-dbms-forum
 tech-db-forum.dat.gz
+main
