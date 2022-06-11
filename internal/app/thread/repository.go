@@ -150,7 +150,7 @@ func (r *RepoPgx) UpdateVote(vote models.VoteRequest, voteId int) (id int, err e
 func (r *RepoPgx) InsertVote(userId int, vote models.VoteRequest, thread models.ThreadResponse) (err error) {
 	err = r.DB.QueryRow(
 		`insert into "vote" ("user", "thread", "voice") 
-			value ($1, $2, $3) 
+			values ($1, $2, $3) 
 			returning "user";`,
 			userId, thread.Id, vote.Voice,
 			).Scan(
