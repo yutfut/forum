@@ -136,15 +136,22 @@ create unlogged table if not exists "forum_user" (
     "forum" bigint      references "forum" (id) not null
 );
 
--- `select "nickname" from "user" where "nickname" = $1;`
+--  `select "nickname" from "user" where "nickname" = $1;`
 drop index if exists idxex_user_by_nickname;
-create unique   index if not exists idx_user_by_nickname on users using hash (nickname);
+create unique index if not exists idx_user_by_nickname on user (nickname);   --  using hash
+
 
 --  `select "id", "title", "author", "forum", "message", "votes", "slug", "created"
 --  from "thread"
 --  where "slug" = $1 or "id" = $2;`
 drop index if exists idxex_thread_by_id_slug;
 create index if not exists idxex_thread_by_id_slug on thread (slug, id);
+
+--  `select "id", "title", "author", "forum", "message", "votes", "slug", "created"
+--  from "thread"
+--  where "slug" = $1;`
+drop index if exists idxex_thread_by_slug;
+create index if not exists idxex_thread_by_slug on thread (slug);
 
 --  `select "id", "user", "thread", "voice"
 --  from "vote"
@@ -156,10 +163,10 @@ create index if not exists idxex_vote_by_user_thread on vote (user, thread);
 --  FROM "user"
 --  WHERE "email" = $1;`
 drop index if exists idxex_user_by_email;
-create unique   index if not exists idx_user_by_email on users users using hash (email);
+create index if not exists idx_user_by_email on user (email);   --  using hash
 
--- `select "title", "user", "slug", "posts", "threads"
--- from "forum"
--- where "slug" = $1;`
+--  `select "title", "user", "slug", "posts", "threads"
+--  from "forum"
+--  where "slug" = $1;`
 drop index if exists idxex_forum_by_slug;
-create unique   index if not exists idxex_forum_by_slug on forum users using hash (slug);
+create index if not exists idxex_forum_by_slug on forum (slug);   --  using hash

@@ -38,7 +38,8 @@ func (r *RepoPgx) GetForumBySlug(slug string) (forum models.ForumResponse, err e
 func (r *RepoPgx) GetThreadsBySlug(slug string) (thread models.ThreadResponse, err error) {
 	err = r.DB.QueryRow(
 		`select "id", "title", "author", "forum", "message", "votes", "slug", "created"
-		from "thread" WHERE "slug" = $1;`,
+		from "thread" 
+		where "slug" = $1;`,
 		slug,
 	).Scan(
 		&thread.Id,
