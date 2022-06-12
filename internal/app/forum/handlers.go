@@ -78,10 +78,17 @@ func (h *Handlers) GetForumDetails(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
-	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
+	checkForum, err := h.ForumRepo.GetForumBySlug(fmt.Sprintf("%s", ctx.UserValue("slug")))
+	if err != nil {
+		ctx.SetContentType("application/json")
+		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find forum by slug:")})
+		ctx.SetStatusCode(http.StatusNotFound)
+		ctx.SetBody(body)
+		return
+	}
 
 	var thread models.ThreadsRequest
-	err := json.Unmarshal(ctx.PostBody(), &thread)
+	err = json.Unmarshal(ctx.PostBody(), &thread)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
@@ -101,14 +108,6 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 		}
 	}
 
-	checkForum, err := h.ForumRepo.GetForumBySlug(slug)
-	if err != nil {
-		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find forum by slug:")})
-		ctx.SetStatusCode(http.StatusNotFound)
-		ctx.SetBody(body)
-		return
-	}
 	thread.Forum = checkForum.Slug
 
 	checkAuthor, err := h.ForumRepo.GetUserByNickname(thread.Author)

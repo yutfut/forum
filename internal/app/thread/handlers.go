@@ -79,8 +79,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
-	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(fmt.Sprintf("%s", ctx.UserValue("slug_or_id")))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
@@ -116,31 +115,32 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 		ctx.SetBody(body)
 		return
 	}
+	if err != nil {
+		err = h.ThreadRepo.InsertVote(checkUserId, vote, thread)
+		if err != nil {
+			ctx.SetContentType("application/json")
+			body, _ := json.Marshal(err)
+			ctx.SetStatusCode(http.StatusNotFound)
+			ctx.SetBody(body)
+			return
+		}
 
-	_, err = h.ThreadRepo.UpdateVote(vote, vote1.Id)
-	if err == nil {
-		thread.Votes += 2 * vote.Voice
+		thread.Votes += vote.Voice
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(thread)
 		ctx.SetStatusCode(http.StatusOK)
 		ctx.SetBody(body)
-		return
+	} else {
+		_, err = h.ThreadRepo.UpdateVote(vote, vote1.Id)
+		if err == nil {
+			thread.Votes += 2 * vote.Voice
+			ctx.SetContentType("application/json")
+			body, _ := json.Marshal(thread)
+			ctx.SetStatusCode(http.StatusOK)
+			ctx.SetBody(body)
+			return
+		}
 	}
-
-	err = h.ThreadRepo.InsertVote(checkUserId, vote, thread)
-	if err != nil {
-		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err)
-		ctx.SetStatusCode(http.StatusNotFound)
-		ctx.SetBody(body)
-		return
-	}
-
-	thread.Votes += vote.Voice
-	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(thread)
-	ctx.SetStatusCode(http.StatusOK)
-	ctx.SetBody(body)
 }
 
 func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
