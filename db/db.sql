@@ -18,59 +18,59 @@ drop trigger if exists "create_post"    on "post";
 drop trigger if exists "create_thread"  on "thread";
 
 create unlogged table if not exists "user" (
-    "id"        bigserial                   not null primary key,
-    "nickname"  citext collate "ucs_basic"  not null unique,
-    "fullname"  citext                      not null,
-    "about"     text,
-    "email"     citext                      not null unique
+                                               "id"        bigserial                   not null primary key,
+                                               "nickname"  citext collate "ucs_basic"  not null unique,
+                                               "fullname"  citext                      not null,
+                                               "about"     text,
+                                               "email"     citext                      not null unique
 );
 
 create unlogged table if not exists "forum" (
-    "id"        bigserial not null primary key,
-    "title"     text      not null,
-    "user"      citext    not null,
-    "slug"      citext    not null unique,
-    "posts"     bigint    default 0,
-    "threads"   int       default 0
+                                                "id"        bigserial not null primary key,
+                                                "title"     text      not null,
+                                                "user"      citext    not null,
+                                                "slug"      citext    not null unique,
+                                                "posts"     bigint    default 0,
+                                                "threads"   int       default 0
 );
 
 create unlogged table if not exists "thread" (
-    "id"        bigserial     not null primary key,
-    "title"     text          not null,
-    "author"    citext        not null,
-    "forum"     citext,
-    "message"   text          not null,
-    "votes"     int           default 0,
-    "slug"      citext,
-    "created"   timestamptz   default now()
+                                                 "id"        bigserial     not null primary key,
+                                                 "title"     text          not null,
+                                                 "author"    citext        not null,
+                                                 "forum"     citext,
+                                                 "message"   text          not null,
+                                                 "votes"     int           default 0,
+                                                 "slug"      citext,
+                                                 "created"   timestamptz   default now()
 );
 
 create unlogged table if not exists "post" (
-    "id"        bigserial   not null primary key,
-    "parent"    bigint      default 0,
-    "author"    citext      not null,
-    "message"   text        not null,
-    "isEdited"  bool        default false,
-    "forum"     citext,
-    "thread"    int,
-    "created"   timestamptz default now(),
-    "path"      bigint[]    not null default '{0}'
+                                               "id"        bigserial   not null primary key,
+                                               "parent"    bigint      default 0,
+                                               "author"    citext      not null,
+                                               "message"   text        not null,
+                                               "isEdited"  bool        default false,
+                                               "forum"     citext,
+                                               "thread"    int,
+                                               "created"   timestamptz default now(),
+                                               "path"      bigint[]    not null default '{0}'
 );
 
 create unlogged table if not exists "vote" (
-    "id"        bigserial   not null primary key,
-    "user"      bigint      references "user" (id)   not null,
-    "thread"    bigint      references "thread" (id) not null,
-    "voice"     int,
-    constraint checks       unique ("user", "thread")
+                                               "id"        bigserial   not null primary key,
+                                               "user"      bigint      references "user" (id)   not null,
+                                               "thread"    bigint      references "thread" (id) not null,
+                                               "voice"     int,
+                                               constraint checks       unique ("user", "thread")
 );
 
 create function thread_vote() returns trigger as $$
 begin
-update "thread"
-set "votes"=(votes + new.voice)
-where "id" = new.thread;
-return new;
+    update "thread"
+    set "votes"=(votes + new.voice)
+    where "id" = new.thread;
+    return new;
 end;
 $$ language plpgsql;
 
@@ -78,14 +78,14 @@ create trigger "vote_insert"
     after insert
     on "vote"
     for each row
-    execute procedure thread_vote();
+execute procedure thread_vote();
 
 create function thread_vote_update() returns trigger as $$
 begin
-update "thread"
-set "votes"=(votes + 2*new.voice)
-where "id" = new.thread;
-return new;
+    update "thread"
+    set "votes"=(votes + 2*new.voice)
+    where "id" = new.thread;
+    return new;
 end;
 $$ language plpgsql;
 
@@ -93,17 +93,17 @@ create trigger "vote_update"
     after update
     on "vote"
     for each row
-    execute procedure thread_vote_update();
+execute procedure thread_vote_update();
 
 create function create_post() returns trigger as $$
 begin
-update "forum"
-set "posts" = posts + 1
-where "slug" = new.forum;
-new.path = (select "path" from "post" where "id" = new.parent LIMIT 1) || new.id;
-insert into "forum_user" ("user", "forum")
-values ((select "id" from "user" where new.author = nickname), (select "id" from "forum" where new.forum = slug));
-return new;
+    update "forum"
+    set "posts" = posts + 1
+    where "slug" = new.forum;
+    new.path = (select "path" from "post" where "id" = new.parent LIMIT 1) || new.id;
+    insert into "forum_user" ("user", "forum")
+    values ((select "id" from "user" where new.author = nickname), (select "id" from "forum" where new.forum = slug));
+    return new;
 end
 $$ language plpgsql;
 
@@ -111,16 +111,16 @@ create trigger "create_post"
     before insert
     on "post"
     for each row
-    execute procedure create_post();
+execute procedure create_post();
 
 create function create_thread() returns trigger as $$
 begin
-update "forum"
-set "threads" = threads + 1
-where "slug" = new.forum;
-INSERT INTO "forum_user" ("user", "forum")
-values ((select "id" from "user" where new.author = nickname), (select "id" from "forum" where new.forum = slug));
-return new;
+    update "forum"
+    set "threads" = threads + 1
+    where "slug" = new.forum;
+    INSERT INTO "forum_user" ("user", "forum")
+    values ((select "id" from "user" where new.author = nickname), (select "id" from "forum" where new.forum = slug));
+    return new;
 end
 $$ language plpgsql;
 
@@ -128,12 +128,12 @@ create trigger "create_thread"
     before insert
     on "thread"
     for each row
-    execute procedure create_thread();
+execute procedure create_thread();
 
 create unlogged table if not exists "forum_user" (
-    "id"    bigserial                           not null primary key,
-    "user"  bigint      references "user" (id)  not null,
-    "forum" bigint      references "forum" (id) not null
+                                                     "id"    bigserial                           not null primary key,
+                                                     "user"  bigint      references "user" (id)  not null,
+                                                     "forum" bigint      references "forum" (id) not null
 );
 
 --  `select "nickname" from "user" where "nickname" = $1;`
@@ -193,8 +193,8 @@ create unique index if not exists idxex_post_by_thread_path on post using btree 
 -- drop index if exists idxex_post_by_thread_created;
 -- create unique index if not exists idxex_post_by_thread_created on post using btree (thread, created);
 
--- drop index if exists idxex_post_by_thread;
--- CREATE INDEX IF NOT EXISTS idxex_post_by_thread on post using btree (thread);
+drop index if exists idxex_post_by_thread;
+CREATE INDEX IF NOT EXISTS idxex_post_by_thread on post using btree (thread);
 
 -- `select "nickname", "about", "email", "fullname"
 --  from "user"
