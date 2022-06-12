@@ -1,8 +1,7 @@
-FROM golang:latest AS build
+FROM golang:1.15 AS build
 
 ADD . /app
 WORKDIR /app
-RUN go mod tidy
 RUN go build ./cmd/main.go
 
 FROM ubuntu:20.04

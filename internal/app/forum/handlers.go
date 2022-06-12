@@ -61,6 +61,7 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 
 func (h *Handlers) GetForumDetails(ctx *fasthttp.RequestCtx) {
 	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
+
 	checkForum, err := h.ForumRepo.GetForumBySlug(slug)
 	if err != nil {
 		ctx.SetContentType("application/json")
@@ -80,7 +81,6 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
 
 	var thread models.ThreadsRequest
-
 	err := json.Unmarshal(ctx.PostBody(), &thread)
 	if err != nil {
 		ctx.SetContentType("application/json")
