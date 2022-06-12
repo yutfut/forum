@@ -205,4 +205,4 @@ create unique index if not exists idxex_post_by_thread_path on post using btree 
 --            where forum = $1
 --        )`
 drop index if exists idxex_forum_user_by_forum;
-CREATE INDEX IF NOT EXISTS idxex_post_by_thread on forum_user using btree (forum, user);
+CREATE INDEX IF NOT EXISTS idxex_post_by_thread on forum_user using btree (user, forum);
