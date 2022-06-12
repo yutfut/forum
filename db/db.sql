@@ -150,8 +150,8 @@ create index if not exists index_thread_by_id_slug on thread using btree (slug, 
 --  `select "id", "title", "author", "forum", "message", "votes", "slug", "created"
 --  from "thread"
 --  where "slug" = $1;`
--- drop index if exists idxex_thread_by_slug;
--- create index if not exists idxex_thread_by_slug on thread using btree (slug);
+drop index if exists idxex_thread_by_slug;
+create index if not exists idxex_thread_by_slug on thread using btree (slug);
 
 --  `select "id", "user", "thread", "voice"
 --  from "vote"
