@@ -18,51 +18,51 @@ drop trigger if exists "create_post"    on "post";
 drop trigger if exists "create_thread"  on "thread";
 
 create unlogged table if not exists "user" (
-                                               "id"        bigserial                   not null primary key,
-                                               "nickname"  citext collate "ucs_basic"  not null unique,
-                                               "fullname"  citext                      not null,
-                                               "about"     text,
-                                               "email"     citext                      not null unique
+    "id"        bigserial                   not null primary key,
+    "nickname"  citext collate "ucs_basic"  not null unique,
+    "fullname"  citext                      not null,
+    "about"     text,
+    "email"     citext                      not null unique
 );
 
 create unlogged table if not exists "forum" (
-                                                "id"        bigserial not null primary key,
-                                                "title"     text      not null,
-                                                "user"      citext    not null,
-                                                "slug"      citext    not null unique,
-                                                "posts"     bigint    default 0,
-                                                "threads"   int       default 0
+    "id"        bigserial not null primary key,
+    "title"     text      not null,
+    "user"      citext    not null,
+    "slug"      citext    not null unique,
+    "posts"     bigint    default 0,
+    "threads"   int       default 0
 );
 
 create unlogged table if not exists "thread" (
-                                                 "id"        bigserial     not null primary key,
-                                                 "title"     text          not null,
-                                                 "author"    citext        not null,
-                                                 "forum"     citext,
-                                                 "message"   text          not null,
-                                                 "votes"     int           default 0,
-                                                 "slug"      citext,
-                                                 "created"   timestamptz   default now()
+    "id"        bigserial     not null primary key,
+    "title"     text          not null,
+    "author"    citext        not null,
+    "forum"     citext,
+    "message"   text          not null,
+    "votes"     int           default 0,
+    "slug"      citext,
+    "created"   timestamptz   default now()
 );
 
 create unlogged table if not exists "post" (
-                                               "id"        bigserial   not null primary key,
-                                               "parent"    bigint      default 0,
-                                               "author"    citext      not null,
-                                               "message"   text        not null,
-                                               "isEdited"  bool        default false,
-                                               "forum"     citext,
-                                               "thread"    int,
-                                               "created"   timestamptz default now(),
-                                               "path"      bigint[]    not null default '{0}'
+    "id"        bigserial   not null primary key,
+    "parent"    bigint      default 0,
+    "author"    citext      not null,
+    "message"   text        not null,
+    "isEdited"  bool        default false,
+    "forum"     citext,
+    "thread"    int,
+    "created"   timestamptz default now(),
+    "path"      bigint[]    not null default '{0}'
 );
 
 create unlogged table if not exists "vote" (
-                                               "id"        bigserial   not null primary key,
-                                               "user"      bigint      references "user" (id)   not null,
-                                               "thread"    bigint      references "thread" (id) not null,
-                                               "voice"     int,
-                                               constraint checks       unique ("user", "thread")
+    "id"        bigserial   not null primary key,
+    "user"      bigint      references "user" (id)   not null,
+    "thread"    bigint      references "thread" (id) not null,
+    "voice"     int,
+    constraint checks       unique ("user", "thread")
 );
 
 create function thread_vote() returns trigger as $$
