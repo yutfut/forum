@@ -7,8 +7,8 @@ type ThreadsRequest struct {
 	Author	string		`json:"author"`
 	Message	string		`json:"message"`
 	Created	time.Time	`json:"created,omitempty"`
-	Forum 	string
-	Slug 	string
+	Forum 	string		`json:"forum"`
+	Slug 	string		`json:"slug"`
 }
 
 type UpdateThreadsRequest struct {

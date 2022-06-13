@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
 	"fmt"
+	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
 )
@@ -17,7 +18,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
@@ -45,7 +46,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 		err = h.ThreadRepo.CheckPostAuthor(item.Author)
 		if err != nil {
 			ctx.SetContentType("application/json")
-			body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find User by nickname:")})
+			body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find User by nickname:")})
 			ctx.SetStatusCode(http.StatusNotFound)
 			ctx.SetBody(body)
 			return
@@ -55,7 +56,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 			err = h.ThreadRepo.CheckPostByIdAndParent(item.Parent, thread.Id)
 			if err != nil {
 				ctx.SetContentType("application/json")
-				body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Post by Id:")})
+				body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Post by Id:")})
 				ctx.SetStatusCode(http.StatusConflict)
 				ctx.SetBody(body)
 				return
@@ -66,7 +67,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	response, err := h.ThreadRepo.CreatePost(thread, posts)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err)
+		body, _ := json.Marshal(err.Error())
 		ctx.SetStatusCode(http.StatusConflict)
 		ctx.SetBody(body)
 		return
@@ -82,14 +83,14 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(fmt.Sprintf("%s", ctx.UserValue("slug_or_id")))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
 	}
 
 	var vote models.VoteRequest
-	err = json.Unmarshal(ctx.PostBody(), &vote)
+	err = easyjson.Unmarshal(ctx.PostBody(), &vote)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(err.Error())
@@ -101,7 +102,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	checkUserId, err := h.ThreadRepo.GetUserIdByNickname(vote.Nickname)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find user by nickname:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find user by nickname:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
@@ -110,7 +111,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	vote1, err := h.ThreadRepo.CheckUserVotes(checkUserId, thread.Id)
 	if err == nil && vote.Voice == vote1.Voice {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(thread)
+		body, _ := easyjson.Marshal(thread)
 		ctx.SetStatusCode(http.StatusOK)
 		ctx.SetBody(body)
 		return
@@ -119,7 +120,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 		err = h.ThreadRepo.InsertVote(checkUserId, vote, thread)
 		if err != nil {
 			ctx.SetContentType("application/json")
-			body, _ := json.Marshal(err)
+			body, _ := json.Marshal(err.Error())
 			ctx.SetStatusCode(http.StatusNotFound)
 			ctx.SetBody(body)
 			return
@@ -127,7 +128,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 
 		thread.Votes += vote.Voice
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(thread)
+		body, _ := easyjson.Marshal(thread)
 		ctx.SetStatusCode(http.StatusOK)
 		ctx.SetBody(body)
 	} else {
@@ -135,7 +136,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 		if err == nil {
 			thread.Votes += 2 * vote.Voice
 			ctx.SetContentType("application/json")
-			body, _ := json.Marshal(thread)
+			body, _ := easyjson.Marshal(thread)
 			ctx.SetStatusCode(http.StatusOK)
 			ctx.SetBody(body)
 			return
@@ -148,14 +149,14 @@ func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
 	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(thread)
+	body, _ := easyjson.Marshal(thread)
 	ctx.SetStatusCode(http.StatusOK)
 	ctx.SetBody(body)
 }
@@ -165,7 +166,7 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
@@ -208,14 +209,14 @@ func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
 	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find Tread by SlugOrId:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
 	}
 
 	var updateThread models.UpdateThreadsRequest
-	err = json.Unmarshal(ctx.PostBody(), &updateThread)
+	err = easyjson.Unmarshal(ctx.PostBody(), &updateThread)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(err.Error())
@@ -226,7 +227,7 @@ func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
 
 	if updateThread.Title == "" && updateThread.Message == "" {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(thread)
+		body, _ := easyjson.Marshal(thread)
 		ctx.SetStatusCode(http.StatusOK)
 		ctx.SetBody(body)
 		return
@@ -241,14 +242,14 @@ func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
 	thread, err = h.ThreadRepo.UpdateThread(thread, updateThread)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find thread by slug:")})
+		body, _ := easyjson.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find thread by slug:")})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(thread)
+	body, _ := easyjson.Marshal(thread)
 	ctx.SetStatusCode(http.StatusOK)
 	ctx.SetBody(body)
 }
