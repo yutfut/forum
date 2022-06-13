@@ -139,4 +139,7 @@ create unlogged table if not exists "forum_user" (
 drop index if exists index_vote_by_user_thread;
 create index if not exists index_vote_by_user_thread on vote ("user", thread);
 
+drop index if exists index_forum_user_by_forum;
+create index if not exists index_forum_user_by_forum on forum_user ("user", forum);
+
 vacuum analyze;
