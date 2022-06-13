@@ -157,7 +157,7 @@ create index if not exists idxex_thread_by_slug on thread (slug);
 --  from "vote"
 --  where "user" = $1 and "thread" = $2;
 drop index if exists index_vote_by_user_thread;
-create unique unique index if not exists index_vote_by_user_thread on vote using hash ("user", thread);   --    unique  using hash
+create unique index if not exists index_vote_by_user_thread on vote using hash ("user", thread);   --    unique  using hash
 
 --  `SELECT "nickname", "fullname", "about", "email"
 --  FROM "user"
@@ -193,7 +193,7 @@ create unique index if not exists index_post_by_thread_path on post using hash (
 -- create unique index if not exists index_post_by_thread_created on post using btree (thread, created);
 
 drop index if exists index_post_by_thread;
-create index if not exists index_post_by_thread on post (thread);
+create index if not exists index_post_by_thread on post using hash (thread);
 
 -- `select "nickname", "about", "email", "fullname"
 --  from "user"
@@ -204,13 +204,11 @@ create index if not exists index_post_by_thread on post (thread);
 --            where forum = $1
 --        )`
 drop index if exists index_forum_user_by_forum;
-create index if not exists index_forum_user_by_forum on forum_user ("user", forum);
+create index if not exists index_forum_user_by_forum on forum_user using hash ("user", forum);
 
 -- `select "id", "title", "author", "forum", "message", "votes", "slug", "created"
 -- from "thread"
 -- where "forum" = $1`
 drop index if exists index_thread_by_forum;
-create index if not exists index_thread_by_forum on thread (forum);
-
-
+create index if not exists index_thread_by_forum on thread using hash (forum);
 

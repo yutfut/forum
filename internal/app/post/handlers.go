@@ -25,7 +25,6 @@ func (h *Handlers) PostDetails(ctx *fasthttp.RequestCtx) {
 	}
 
 	related := strings.Split(fmt.Sprintf("%s", ctx.FormValue("related")), ",")
-
 	post, err := h.PostRepo.GetPost(id, related)
 	if err != nil {
 		ctx.SetContentType("application/json")
@@ -70,6 +69,7 @@ func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
 		ctx.SetBody(body)
 		return
 	}
+
 	oldPost := postInfo.Post
 	if newPost.Message == "" || oldPost.Message == newPost.Message {
 		ctx.SetContentType("application/json")

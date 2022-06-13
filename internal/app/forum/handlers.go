@@ -60,9 +60,7 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) GetForumDetails(ctx *fasthttp.RequestCtx) {
-	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
-
-	checkForum, err := h.ForumRepo.GetForumBySlug(slug)
+	checkForum, err := h.ForumRepo.GetForumBySlug(fmt.Sprintf("%s", ctx.UserValue("slug")))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find forum")})
@@ -174,8 +172,7 @@ func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
-	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
-	forum, err := h.ForumRepo.GetForumBySlug(slug)
+	forum, err := h.ForumRepo.GetForumBySlug(fmt.Sprintf("%s", ctx.UserValue("slug")))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find forum:")})
