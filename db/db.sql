@@ -136,16 +136,7 @@ create unlogged table if not exists "forum_user" (
     "forum" bigint      references "forum" (id) not null
 );
 
--- drop index if exists index_vote_by_user_thread;
--- create index if not exists index_vote_by_user_thread on vote ("user", thread);
-
--- drop index if exists index_vote_by_user_thread;
--- create unique index if not exists index_vote_by_user_thread on vote ("user", thread);
-
--- drop index if exists index_vote_by_user_thread;
--- create index if not exists index_vote_by_user_thread on vote using hash ("user", thread);
-
--- drop index if exists index_vote_by_user_thread;
--- create unique index if not exists index_vote_by_user_thread on vote using hash ("user", thread);
+drop index if exists index_vote_by_user_thread;
+create index if not exists index_vote_by_user_thread on vote ("user", thread);
 
 vacuum analyze;
