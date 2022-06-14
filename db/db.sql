@@ -161,6 +161,6 @@ drop index if exists index_forum_user_by_forum;
 create index if not exists index_forum_user_by_forum on forum_user ("user", forum);
 
 drop index if exists index_thread_by_forum;
-create index if not exists index_thread_by_forum on thread (forum);
+create unique index if not exists index_thread_by_forum on thread (forum);
 
 vacuum analyze;
