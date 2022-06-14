@@ -137,7 +137,7 @@ create unlogged table if not exists "forum_user" (
 );
 
 drop index if exists index_user_by_nickname;
-create unique index if not exists index_user_by_nickname on "user" (nickname);
+create unique index if not exists index_user_by_nickname on "user" using hash (nickname);
 
 drop index if exists idxex_thread_by_slug;
 create index if not exists idxex_thread_by_slug on thread (slug);
@@ -146,7 +146,7 @@ drop index if exists index_vote_by_user_thread;
 create index if not exists index_vote_by_user_thread on vote ("user", thread);
 
 drop index if exists index_user_by_email;
-create unique index if not exists index_user_by_email on "user" (email);
+create unique index if not exists index_user_by_email on "user" using hash (email);
 
 drop index if exists index_forum_by_slug;
 create index if not exists index_forum_by_slug on forum (slug);
@@ -158,7 +158,7 @@ drop index if exists index_post_by_thread;
 create index if not exists index_post_by_thread on post (thread);
 
 drop index if exists index_forum_user_by_forum;
-create unique index if not exists index_forum_user_by_forum on forum_user ("user", forum);
+create index if not exists index_forum_user_by_forum on forum_user ("user", forum);
 
 drop index if exists index_thread_by_forum;
 create index if not exists index_thread_by_forum on thread (forum);
