@@ -64,7 +64,7 @@ func (h *Handlers) GetProfileByNickname(ctx *fasthttp.RequestCtx) {
 
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find user by nickname: %s", nickname)})
+		body, _ := json.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
@@ -81,7 +81,7 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	newUserData, err := h.UserRepo.GetUserByNickname(nickname)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("Can't find user by nickname: %s", fmt.Sprintf("%s", ctx.UserValue("nickname")))})
+		body, _ := json.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
@@ -99,7 +99,7 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	checkUser, err := h.UserRepo.GetUserByEmail(newUserData.Email)
 	if !checkUser.IsEmpty() && checkUser.Nickname != newUserData.Nickname {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: fmt.Sprintf("This email is already registered by user: %s", newUserData.Email)})
+		body, _ := json.Marshal(models.MessageError{Message:"This email is already registered by user:"})
 		ctx.SetStatusCode(http.StatusConflict)
 		ctx.SetBody(body)
 		return
