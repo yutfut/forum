@@ -29,7 +29,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		body, _ := json.Marshal(err.Error())
+		body, _ := easyjson.Marshal(nil)
 		ctx.SetBody(body)
 		return
 	}
@@ -67,7 +67,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	response, err := h.ThreadRepo.CreatePost(thread, posts)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
+		body, _ := easyjson.Marshal(nil)
 		ctx.SetStatusCode(http.StatusConflict)
 		ctx.SetBody(body)
 		return
@@ -93,7 +93,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	err = easyjson.Unmarshal(ctx.PostBody(), &vote)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
+		body, _ := easyjson.Marshal(nil)
 		ctx.SetStatusCode(http.StatusBadRequest)
 		ctx.SetBody(body)
 		return
@@ -120,7 +120,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 		err = h.ThreadRepo.InsertVote(checkUserId, vote, thread)
 		if err != nil {
 			ctx.SetContentType("application/json")
-			body, _ := json.Marshal(err.Error())
+			body, _ := easyjson.Marshal(nil)
 			ctx.SetStatusCode(http.StatusNotFound)
 			ctx.SetBody(body)
 			return
@@ -192,7 +192,7 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 	posts, err := h.ThreadRepo.GetThreadPost(thread, limit, since, sort, desc)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
+		body, _ := easyjson.Marshal(nil)
 		ctx.SetStatusCode(http.StatusNotFound)
 		ctx.SetBody(body)
 		return
@@ -219,7 +219,7 @@ func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
 	err = easyjson.Unmarshal(ctx.PostBody(), &updateThread)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
+		body, _ := easyjson.Marshal(nil)
 		ctx.SetStatusCode(http.StatusBadRequest)
 		ctx.SetBody(body)
 		return
