@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -30,7 +29,7 @@ func (h *Handlers) ServiceStatus(ctx *fasthttp.RequestCtx) {
 func (h *Handlers) ServiceClear(ctx *fasthttp.RequestCtx) {
 	if err := h.ServiceRepo.Clear(); err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal("")
+		body, _ := easyjson.Marshal(nil)
 		ctx.SetStatusCode(http.StatusInternalServerError)
 		ctx.SetBody(body)
 	}

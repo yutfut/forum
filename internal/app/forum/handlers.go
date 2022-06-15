@@ -20,8 +20,8 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		body, _ := easyjson.Marshal(nil)
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
@@ -48,9 +48,9 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	newForum, err := h.ForumRepo.CreateForum(forum)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
 		ctx.SetStatusCode(http.StatusInternalServerError)
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
@@ -65,15 +65,15 @@ func (h *Handlers) GetForumDetails(ctx *fasthttp.RequestCtx) {
 	checkForum, err := h.ForumRepo.GetForumBySlug(ctx.UserValue("slug").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum"})
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := easyjson.Marshal(checkForum)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := easyjson.Marshal(checkForum)
 	ctx.SetBody(body)
 }
 
@@ -81,8 +81,8 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	checkForum, err := h.ForumRepo.GetForumBySlug(ctx.UserValue("slug").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum by slug:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum by slug:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -92,8 +92,8 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		body, _ := json.Marshal(err.Error())
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
@@ -113,8 +113,8 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	checkAuthor, err := h.ForumRepo.GetUserByNickname(thread.Author)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -123,26 +123,25 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	newThread, err := h.ForumRepo.CreateThread(thread)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		//body, _ := json.Marshal(err.Error())
-		body, _ := json.Marshal(nil)
 		ctx.SetStatusCode(http.StatusInternalServerError)
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := easyjson.Marshal(newThread)
 	ctx.SetStatusCode(http.StatusCreated)
+	body, _ := easyjson.Marshal(newThread)
 	ctx.SetBody(body)
 }
 
 func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
-	slug := fmt.Sprintf("%s", ctx.UserValue("slug"))
+	slug := ctx.UserValue("slug").(string)
 	_, err := h.ForumRepo.GetForumBySlug(slug)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum by slug:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum by slug:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -162,15 +161,15 @@ func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
 	threads, err := h.ForumRepo.GetForumThreads(slug, limit, since, desc)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Forum by slug:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Forum by slug:"})
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(threads)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := json.Marshal(threads)
 	ctx.SetBody(body)
 }
 
@@ -178,8 +177,8 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	forum, err := h.ForumRepo.GetForumBySlug(ctx.UserValue("slug").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -199,14 +198,14 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	users, err := h.ForumRepo.GetUsers(forum, limit, since, desc)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find forum:"})
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(users)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := json.Marshal(users)
 	ctx.SetBody(body)
 }
