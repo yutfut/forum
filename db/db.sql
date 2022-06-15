@@ -149,7 +149,7 @@ drop index if exists index_user_by_email;
 create unique index if not exists index_user_by_email on "user" using hash (email);
 
 drop index if exists index_forum_by_slug;
-create unique index if not exists index_forum_by_slug on forum (slug);
+create index if not exists index_forum_by_slug on forum (slug);
 
 drop index if exists index_post_by_thread_path;
 create unique index if not exists index_post_by_thread_path on post (thread, path);
@@ -162,5 +162,8 @@ create index if not exists index_forum_user_by_forum on forum_user ("user", foru
 
 drop index if exists index_thread_by_forum;
 create index if not exists index_thread_by_forum on thread (forum);
+
+drop index if exists index_thread_by_created;
+create index if not exists index_thread_by_created on thread (created);
 
 vacuum analyze;
