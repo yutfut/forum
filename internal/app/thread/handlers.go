@@ -14,8 +14,7 @@ type Handlers struct {
 }
 
 func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
-	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(ctx.UserValue("slug_or_id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
@@ -80,7 +79,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
-	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(fmt.Sprintf("%s", ctx.UserValue("slug_or_id")))
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(ctx.UserValue("slug_or_id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
@@ -145,8 +144,7 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
-	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(ctx.UserValue("slug_or_id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
@@ -162,8 +160,7 @@ func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
-	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(ctx.UserValue("slug_or_id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
@@ -205,8 +202,7 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
-	slugOrId := fmt.Sprintf("%s", ctx.UserValue("slug_or_id"))
-	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(slugOrId)
+	thread, err := h.ThreadRepo.GetForumThreadBySlugOrId(ctx.UserValue("slug_or_id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})

@@ -3,7 +3,6 @@ package user
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
-	"fmt"
 	"github.com/valyala/fasthttp"
 	"net/http"
 )
@@ -23,7 +22,7 @@ func (h *Handlers) CreateUser(ctx *fasthttp.RequestCtx) {
 		ctx.SetBody(body)
 		return
 	}
-	user.Nickname = fmt.Sprintf("%s", ctx.UserValue("nickname"))
+	user.Nickname = ctx.UserValue("nickname").(string)
 
 	user1, err1 := h.UserRepo.GetUserByNickname(user.Nickname)
 	user2, err2 := h.UserRepo.GetUserByEmail(user.Email)
@@ -59,8 +58,7 @@ func (h *Handlers) CreateUser(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) GetProfileByNickname(ctx *fasthttp.RequestCtx) {
-	nickname := fmt.Sprintf("%s", ctx.UserValue("nickname"))
-	user, err := h.UserRepo.GetUserByNickname(nickname)
+	user, err := h.UserRepo.GetUserByNickname(ctx.UserValue("nickname").(string))
 
 	if err != nil {
 		ctx.SetContentType("application/json")
@@ -77,8 +75,7 @@ func (h *Handlers) GetProfileByNickname(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
-	nickname := fmt.Sprintf("%s", ctx.UserValue("nickname"))
-	newUserData, err := h.UserRepo.GetUserByNickname(nickname)
+	newUserData, err := h.UserRepo.GetUserByNickname(ctx.UserValue("nickname").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := json.Marshal(models.MessageError{Message: "Can't find user by nickname:"})

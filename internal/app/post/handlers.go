@@ -16,7 +16,7 @@ type Handlers struct {
 }
 
 func (h *Handlers) PostDetails(ctx *fasthttp.RequestCtx) {
-	id, err := strconv.Atoi(fmt.Sprintf("%s", ctx.UserValue("id")))
+	id, err := strconv.Atoi(ctx.UserValue("id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
@@ -42,7 +42,7 @@ func (h *Handlers) PostDetails(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
-	id, err := strconv.Atoi(fmt.Sprintf("%s", ctx.UserValue("id")))
+	id, err := strconv.Atoi(ctx.UserValue("id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
