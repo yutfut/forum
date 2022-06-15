@@ -3,7 +3,6 @@ package post
 import (
 	_ "encoding/json"
 	"example.com/greetings/internal/app/models"
-	"fmt"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -25,7 +24,7 @@ func (h *Handlers) PostDetails(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	related := strings.Split(fmt.Sprintf("%s", ctx.FormValue("related")), ",")
+	related := strings.Split(string(ctx.FormValue("related")), ",")
 	post, err := h.PostRepo.GetPost(id, related)
 	if err != nil {
 		ctx.SetContentType("application/json")

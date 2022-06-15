@@ -3,7 +3,6 @@ package thread
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
-	"fmt"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -176,20 +175,20 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	limit := fmt.Sprintf("%s", ctx.FormValue("limit"))
+	limit := string(ctx.FormValue("limit"))
 	if limit == "" {
 		limit = "100"
 	}
 
-	since := fmt.Sprintf("%s", ctx.FormValue("since"))
+	since := string(ctx.FormValue("since"))
 
-	sort := fmt.Sprintf("%s", ctx.FormValue("sort"))
+	sort := string(ctx.FormValue("sort"))
 	if sort == "" {
 		sort = "flat"
 	}
 
 	desc := ""
-	if fmt.Sprintf("%s", ctx.FormValue("desc")) == "true" {
+	if string(ctx.FormValue("desc")) == "true" {
 		desc = "desc"
 	}
 

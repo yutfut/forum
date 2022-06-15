@@ -3,7 +3,6 @@ package forum
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
-	"fmt"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -142,15 +141,15 @@ func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	limit := fmt.Sprintf("%s", ctx.FormValue("limit"))
+	limit := string(ctx.FormValue("limit"))
 	if limit == "" {
 		limit = "100"
 	}
 
-	since := fmt.Sprintf("%s", ctx.FormValue("since"))
+	since := string(ctx.FormValue("since"))
 
 	desc := ""
-	if fmt.Sprintf("%s", ctx.FormValue("desc")) == "true" {
+	if string(ctx.FormValue("desc")) == "true" {
 		desc = "desc"
 	}
 
@@ -180,15 +179,15 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	limit := fmt.Sprintf("%s", ctx.FormValue("limit"))
+	limit := string(ctx.FormValue("limit"))
 	if limit == "" {
 		limit = "100"
 	}
 
-	since := fmt.Sprintf("%s", ctx.FormValue("since"))
+	since := string(ctx.FormValue("since"))
 
 	desc := ""
-	if fmt.Sprintf("%s", ctx.FormValue("desc")) == "true" {
+	if string(ctx.FormValue("desc")) == "true" {
 		desc = "desc"
 	}
 
