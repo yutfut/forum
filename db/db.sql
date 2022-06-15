@@ -167,4 +167,4 @@ create index if not exists index_thread_by_forum on thread using hash (forum);
 -- drop index if exists index_thread_by_created;
 -- create index if not exists index_thread_by_created on thread (created);
 
-vacuum analyze;
+-- vacuum analyze;
