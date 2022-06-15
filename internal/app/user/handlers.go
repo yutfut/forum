@@ -64,6 +64,7 @@ func (h *Handlers) GetProfileByNickname(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
+		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
@@ -80,6 +81,7 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
+		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
@@ -98,6 +100,7 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	if !checkUser.IsEmpty() && checkUser.Nickname != newUserData.Nickname {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusConflict)
+		//
 		body, _ := easyjson.Marshal(models.MessageError{Message:"This email is already registered by user:"})
 		ctx.SetBody(body)
 		return
