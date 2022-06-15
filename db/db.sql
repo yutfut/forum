@@ -27,11 +27,11 @@ create unlogged table if not exists "user" (
 
 create unlogged table if not exists "forum" (
     "id"        bigserial not null primary key,
-    "title"     text      not null,
-    "user"      citext    not null,
-    "slug"      citext    not null unique,
-    "posts"     bigint    default 0,
-    "threads"   int       default 0
+    "title"     text                        not null,
+    "user"      citext collate "ucs_basic"  not null,
+    "slug"      citext                      not null unique,
+    "posts"     bigint                      default 0,
+    "threads"   int                         default 0
 );
 
 create unlogged table if not exists "thread" (
