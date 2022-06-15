@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
+	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
 )
@@ -14,12 +15,12 @@ type Handlers struct {
 func (h *Handlers) CreateUser(ctx *fasthttp.RequestCtx) {
 	var user models.User
 
-	err := json.Unmarshal(ctx.PostBody(), &user)
+	err := easyjson.Unmarshal(ctx.PostBody(), &user)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		body, _ := json.Marshal(err.Error())
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 	user.Nickname = ctx.UserValue("nickname").(string)
@@ -45,15 +46,15 @@ func (h *Handlers) CreateUser(ctx *fasthttp.RequestCtx) {
 	_, err = h.UserRepo.CreateUser(user)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
 		ctx.SetStatusCode(http.StatusInternalServerError)
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(user)
 	ctx.SetStatusCode(http.StatusCreated)
+	body, _ := easyjson.Marshal(user)
 	ctx.SetBody(body)
 }
 
@@ -62,15 +63,15 @@ func (h *Handlers) GetProfileByNickname(ctx *fasthttp.RequestCtx) {
 
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(user)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := easyjson.Marshal(user)
 	ctx.SetBody(body)
 }
 
@@ -78,8 +79,8 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	newUserData, err := h.UserRepo.GetUserByNickname(ctx.UserValue("nickname").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -88,16 +89,16 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		body, _ := json.Marshal(err.Error())
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
 	checkUser, err := h.UserRepo.GetUserByEmail(newUserData.Email)
 	if !checkUser.IsEmpty() && checkUser.Nickname != newUserData.Nickname {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(models.MessageError{Message:"This email is already registered by user:"})
 		ctx.SetStatusCode(http.StatusConflict)
+		body, _ := easyjson.Marshal(models.MessageError{Message:"This email is already registered by user:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -105,9 +106,9 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	user, err := h.UserRepo.UpdateProfile(newUserData)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := json.Marshal(err.Error())
 		ctx.SetStatusCode(http.StatusNotFound)
-		ctx.SetBody(body)
+		//body, _ := easyjson.Marshal(nil)
+		//ctx.SetBody(body)
 		return
 	}
 
@@ -116,7 +117,7 @@ func (h *Handlers) UpdateProfile(ctx *fasthttp.RequestCtx) {
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := json.Marshal(user)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := easyjson.Marshal(user)
 	ctx.SetBody(body)
 }

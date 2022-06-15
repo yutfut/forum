@@ -19,8 +19,8 @@ func (h *Handlers) PostDetails(ctx *fasthttp.RequestCtx) {
 	id, err := strconv.Atoi(ctx.UserValue("id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
 		ctx.SetBody(body)
 		return
 	}
@@ -29,15 +29,15 @@ func (h *Handlers) PostDetails(ctx *fasthttp.RequestCtx) {
 	post, err := h.PostRepo.GetPost(id, related)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find post with id:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find post with id:"})
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := easyjson.Marshal(post)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := easyjson.Marshal(post)
 	ctx.SetBody(body)
 }
 
@@ -45,8 +45,8 @@ func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
 	id, err := strconv.Atoi(ctx.UserValue("id").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
 		ctx.SetBody(body)
 		return
 	}
@@ -55,8 +55,8 @@ func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
 	err = easyjson.Unmarshal(ctx.PostBody(), &newPost)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
 		ctx.SetStatusCode(http.StatusBadRequest)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Error"})
 		ctx.SetBody(body)
 		return
 	}
@@ -65,8 +65,8 @@ func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
 	postInfo, err := h.PostRepo.GetPost(id, related)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find post with id:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find post with id:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -74,8 +74,8 @@ func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
 	oldPost := postInfo.Post
 	if newPost.Message == "" || oldPost.Message == newPost.Message {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(oldPost)
 		ctx.SetStatusCode(http.StatusOK)
+		body, _ := easyjson.Marshal(oldPost)
 		ctx.SetBody(body)
 		return
 	}
@@ -83,15 +83,15 @@ func (h *Handlers) UpdatePost(ctx *fasthttp.RequestCtx) {
 	post, err := h.PostRepo.UpdatePost(id, newPost)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find post with id:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find post with id:"})
 		ctx.SetBody(body)
 		return
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := easyjson.Marshal(post)
 	ctx.SetStatusCode(http.StatusOK)
+	body, _ := easyjson.Marshal(post)
 	ctx.SetBody(body)
 	return
 }

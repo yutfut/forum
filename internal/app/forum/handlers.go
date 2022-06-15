@@ -28,8 +28,8 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	checkForum, err := h.ForumRepo.GetForumBySlug(forum.Slug)
 	if err == nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(checkForum)
 		ctx.SetStatusCode(http.StatusConflict)
+		body, _ := easyjson.Marshal(checkForum)
 		ctx.SetBody(body)
 		return
 	}
@@ -37,8 +37,8 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	checkUser, err := h.ForumRepo.GetUserByNickname(forum.User)
 	if err != nil {
 		ctx.SetContentType("application/json")
-		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetStatusCode(http.StatusNotFound)
+		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
 	}
@@ -55,8 +55,8 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	}
 
 	ctx.SetContentType("application/json")
-	body, _ := easyjson.Marshal(newForum)
 	ctx.SetStatusCode(http.StatusCreated)
+	body, _ := easyjson.Marshal(newForum)
 	ctx.SetBody(body)
 }
 
