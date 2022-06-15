@@ -149,7 +149,7 @@ drop index if exists index_user_by_email;
 create unique index if not exists index_user_by_email on "user" using hash (email);
 
 drop index if exists index_forum_by_slug;
-create index if not exists index_forum_by_slug on forum (slug);
+create unique index if not exists index_forum_by_slug on forum (slug);
 
 drop index if exists index_post_by_thread_path;
 create unique index if not exists index_post_by_thread_path on post (thread, path);
