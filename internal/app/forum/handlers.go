@@ -14,7 +14,7 @@ type Handlers struct {
 
 
 func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
-	var forum models.ForumRequestDelivery
+	forum := models.ForumRequestDelivery{}
 	err := easyjson.Unmarshal(ctx.PostBody(), &forum)
 	if err != nil {
 		ctx.SetContentType("application/json")
@@ -84,7 +84,7 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	var thread models.ThreadsRequest
+	thread := models.ThreadsRequest{}
 	err = easyjson.Unmarshal(ctx.PostBody(), &thread)
 	if err != nil {
 		ctx.SetContentType("application/json")
