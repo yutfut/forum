@@ -163,8 +163,7 @@ create index if not exists index_forum_user_by_forum on forum_user (forum, "user
 drop index if exists index_thread_by_forum;
 create index if not exists index_thread_by_forum on thread (forum);
 
--- new index
 drop index if exists index_thread_by_created;
 create index if not exists index_thread_by_created on thread (created);
 
--- vacuum analyze;
+vacuum analyze;
