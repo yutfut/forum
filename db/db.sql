@@ -136,7 +136,7 @@ create unlogged table if not exists "forum_user" (
     "forum" bigint      references "forum" (id) not null
 );
 
-drop index if exists index_user_by_nickname;
+-- drop index if exists index_user_by_nickname;
 create unique index if not exists index_user_by_nickname on "user" (nickname);
 
 drop index if exists idxex_thread_by_slug;
@@ -158,7 +158,7 @@ drop index if exists index_post_by_thread;
 create index if not exists index_post_by_thread on post (thread);
 
 drop index if exists index_forum_user_by_forum;
-create index if not exists index_forum_user_by_forum on forum_user ("user", forum);
+create index if not exists index_forum_user_by_forum on forum_user (forum, "user");
 
 drop index if exists index_thread_by_forum;
 create index if not exists index_thread_by_forum on thread (forum);
