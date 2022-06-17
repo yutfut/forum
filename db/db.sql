@@ -151,4 +151,7 @@ create index if not exists index_thread_by_slug on thread (slug);
 drop index if exists index_thread_by_forum;
 create index if not exists index_thread_by_forum on thread (forum);
 
+drop index if exists index_thread_by_created;
+create index if not exists index_thread_by_created on thread (created);
+
 vacuum analyze;
