@@ -86,7 +86,7 @@ func main() {
 	service.SetServiceRouting(r, &service.Handlers{
 		ServiceRepo: service.NewPgxRepository(db),
 	})
-	fmt.Printf("Start server on port :5000\n")
+	fmt.Printf("Start server on port :5000")
 
 	//log.Fatal(fasthttp.ListenAndServe(":5000", r.Handler))
 	log.Fatal(fasthttp.ListenAndServe(":5000", p.Handler))
