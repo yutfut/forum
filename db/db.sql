@@ -19,7 +19,7 @@ drop trigger if exists "create_thread"  on "thread";
 
 create unlogged table if not exists "user" (
     "id"        bigserial                   not null primary key,
-    "nickname"  citext collate "ucs_basic"  not null unique,
+    "nickname"  citext                      not null unique,
     "fullname"  citext                      not null,
     "about"     text,
     "email"     citext                      not null unique

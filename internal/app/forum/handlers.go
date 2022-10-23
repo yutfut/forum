@@ -3,6 +3,7 @@ package forum
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
+	"fmt"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -169,6 +170,11 @@ func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
 }
 
 func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
+	fmt.Println("_______________")
+	fmt.Println("_______________")
+	fmt.Println("_______________")
+	fmt.Println("_______________")
+	fmt.Println("_______________")
 	forum, err := h.ForumRepo.GetForumBySlug(ctx.UserValue("slug").(string))
 	if err != nil {
 		ctx.SetContentType("application/json")
@@ -190,13 +196,24 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	if string(ctx.FormValue("desc")) == "true" {
 		desc = "desc"
 	}
+	if string(ctx.FormValue("desc")) == "false" {
+		desc = "asc"
+	}
+
+	fmt.Println("_______________")
+	fmt.Println(forum)
+	fmt.Println("_______________")
+	fmt.Println(limit)
+	fmt.Println("_______________")
+	fmt.Println(since)
+	fmt.Println("_______________")
+	fmt.Println(desc)
+	fmt.Println("_______________")
 
 	users, err := h.ForumRepo.GetUsers(forum, limit, since, desc)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//body, _ := easyjson.Marshal(models.MessageError{Message: ""})
-		//ctx.SetBody(body)
 		return
 	}
 

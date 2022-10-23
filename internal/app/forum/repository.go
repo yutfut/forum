@@ -147,6 +147,9 @@ func (r *RepoPgx) GetUsers(forum models.ForumResponse, limit, since, desc string
 	}
 	query += fmt.Sprintf(` order by "nickname" %s limit %s;`, desc, limit)
 
+	fmt.Println("___________________")
+	fmt.Println(query)
+	fmt.Println("___________________")
 	rows, err := r.DB.Query(query, forum.Id)
 	if err != nil {
 		return []models.User{}, err
