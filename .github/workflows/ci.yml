@@ -22,3 +22,18 @@ jobs:
 
       - name: Test
         run: go test ./...
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image back
+        run: docker build -f=backend.Dockerfile -t yutfut/devopsback:v1 .
+
+      - name: Push the image bcak
+        run: docker push yutfut/devopsback:v1
