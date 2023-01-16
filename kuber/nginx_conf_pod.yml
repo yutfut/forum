@@ -1,0 +1,21 @@
+cat <<EOF | kubectl apply -f-
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: nginx-configmap
+  data:
+    student-server.conf: |
+      server {
+          listen 80;
+
+          server_tokens off;
+          server_name 127.0.0.1;
+
+          location / {
+              proxy_pass http://127.0.0.1:5000;
+          }
+      }
+EOF
+
+
+  configmap/nginx-configmap created

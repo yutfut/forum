@@ -1,0 +1,14 @@
+cat <<EOF > forum_pod.yml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: forum
+    annotations:
+      ingress.kubernetes.io/rewrite-target: /
+  spec:
+    containers:
+      - name: forum
+        image: yutfut/forum:v1
+        ports:
+          - containerPort: 5000
+EOF
