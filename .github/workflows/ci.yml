@@ -37,3 +37,9 @@ jobs:
 
       - name: Push the image bcak
         run: docker push yutfut/devopsback:v1
+
+      - name: Build Docker image back
+        run: docker build -f=database.Dockerfile -t yutfut/devopsdatabase:v1 .
+
+      - name: Push the image bcak
+        run: docker push yutfut/devopsdatabase:v1
