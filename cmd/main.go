@@ -7,6 +7,8 @@ import (
 	"example.com/greetings/internal/app/thread"
 	"example.com/greetings/internal/app/user"
 	"fmt"
+	//fasthttpprom "github.com/701search/fasthttp-prometheus-middleware" //added
+	fasthttpprom "example.com/greetings/internal/app/metrics"
 	"github.com/fasthttp/router"
 	"github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
@@ -23,6 +25,17 @@ type DBConfig struct {
 
 func main() {
 	r := router.New()
+
+	//added
+	p := fasthttpprom.NewPrometheus("")
+	p.Use(r)
+
+	//r.GET("/health", func(ctx *fasthttp.RequestCtx) {
+	//	ctx.SetStatusCode(200)
+	//	ctx.SetBody([]byte(`{"status": "pass"}`))
+	//	log.Println(string(ctx.Request.URI().Path()))
+	//})
+	//
 
 	DBConf := DBConfig{
 		Host: "127.0.0.1",
@@ -73,6 +86,8 @@ func main() {
 	service.SetServiceRouting(r, &service.Handlers{
 		ServiceRepo: service.NewPgxRepository(db),
 	})
-	fmt.Printf("Start server on port :5000\n")
-	log.Fatal(fasthttp.ListenAndServe(":5000", r.Handler))
+	fmt.Printf("Start server on port :5000")
+
+	//log.Fatal(fasthttp.ListenAndServe(":5000", r.Handler))
+	log.Fatal(fasthttp.ListenAndServe(":5000", p.Handler))
 }
