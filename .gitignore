@@ -22,7 +22,6 @@
 go.sum
 */models_easyjson.go
 
-docker-compose.yml
 technopark-dbms-forum
 tech-db-forum.dat.gz
 main

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  forum:
+    image: yutfut/forum:v1
+    restart: always
+    ports:
+      - '5000:5000'
+
+  nginx:
+    image: nginx:1.21.3-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx_config/default.conf:/etc/nginx/conf.d/default.conf
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./prometheus_config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - '9090:9090'
+
+  grafana:
+    image: grafana/grafana-enterprise:8.2.0
+    links:
+      - "prometheus:prometheus"
+    ports:
+      - "3000:3000"
+    user: '472'
+    environment:
+      GF_SECURITY_ADMIN_USER: yutfut
+      GF_SECURITY_ADMIN_PASSWORD: yutfut
