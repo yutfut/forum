@@ -13,7 +13,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: forum
+                name: nginx
                 port:
                   number: 5000
 EOF

@@ -7,15 +7,33 @@ cat <<EOF | kubectl apply -f-
     student-server.conf: |
       server {
           listen 80;
-
-          server_tokens off;
-          server_name 127.0.0.1;
+          server_name 109.120.183.14;
 
           location / {
-              proxy_pass http://127.0.0.1:5000;
+              proxy_pass http://nginx-service:5000;
           }
       }
 EOF
 
+cat <<EOF | kubectl apply -f-
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: myapp-ingress
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+  spec:
+    ingressClassName: nginx-example
+    rules:
+      - http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: app-service
+                  port:
+                    number: 5000
+EOF
 
-  configmap/nginx-configmap created
+configmap/nginx-configmap created
