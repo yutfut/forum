@@ -1,12 +1,14 @@
 package forum
 
-import "github.com/fasthttp/router"
+import (
+	//"github.com/fasthttp/router"
+	"github.com/georgecookeIW/fasthttprouter"
+)
 
-func SetForumRouting(r *router.Router, h *Handlers) {
-	//r.POST("/api/forum/create", h.CreateForum)
-	//r.GET("/api/forum/{slug}/details", h.GetForumDetails)
-	//r.POST("/api/forum/{slug}/create", h.CreateThread)
-	//r.GET("/api/forum/{slug}/threads", h.GetForumThreads)
-	//r.GET("/api/forum/{slug}/users", h.ForumUsers)
+
+
+func SetForumRouting(r *fasthttprouter.Router, h *Handlers) {
 	r.GET("/api/get_task", h.GetTask)
+	r.GET("/api/get_task/details/:id", h.GetTaskById)
+	r.POST("/api/send_solution", h.SendSolution)
 }

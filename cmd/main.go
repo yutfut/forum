@@ -2,16 +2,12 @@ package main
 
 import (
 	"example.com/greetings/internal/app/forum"
-	"example.com/greetings/internal/app/post"
-	"example.com/greetings/internal/app/service"
-	"example.com/greetings/internal/app/thread"
-	"example.com/greetings/internal/app/user"
 	"fmt"
 	//fasthttpprom "github.com/701search/fasthttp-prometheus-middleware" //added
-	fasthttpprom "example.com/greetings/internal/app/metrics"
-	"github.com/fasthttp/router"
+	//"github.com/fasthttp/router"
 	"github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
+	"github.com/georgecookeIW/fasthttprouter"
 	"log"
 )
 
@@ -24,11 +20,14 @@ type DBConfig struct {
 }
 
 func main() {
-	r := router.New()
+	r := fasthttprouter.New()
+
+	r.HandleOPTIONS = true
+	r.HandleCORS.Handle = true
+	r.HandleCORS.AllowOrigin = "*"
+	r.HandleCORS.AllowMethods = []string{"GET", "POST"}
 
 	//added
-	p := fasthttpprom.NewPrometheus("")
-	p.Use(r)
 
 	//r.GET("/health", func(ctx *fasthttp.RequestCtx) {
 	//	ctx.SetStatusCode(200)
@@ -38,7 +37,7 @@ func main() {
 	//
 
 	DBConf := DBConfig{
-		Host: "127.0.0.1",
+		Host: "109.120.182.154",
 		Port: "5432",
 		Username: "yutfut",
 		Password: "yutfut",
@@ -67,27 +66,12 @@ func main() {
 	}
 	fmt.Println("db connect done")
 
-	user.SetServiceRouting(r, &user.Handlers{
-		UserRepo: user.NewPgxRepository(db),
-	})
-
 	forum.SetForumRouting(r, &forum.Handlers{
 		ForumRepo: forum.NewPgxRepository(db),
 	})
 
-	thread.SetThreadRouting(r, &thread.Handlers{
-		ThreadRepo: thread.NewPgxRepository(db),
-	})
-
-	post.SetPostRouting(r, &post.Handlers{
-		PostRepo: post.NewPgxRepository(db),
-	})
-
-	service.SetServiceRouting(r, &service.Handlers{
-		ServiceRepo: service.NewPgxRepository(db),
-	})
-	fmt.Printf("Start server on port :5000")
+	fmt.Printf("Start server on port :8000\n")
 
 	//log.Fatal(fasthttp.ListenAndServe(":5000", r.Handler))
-	log.Fatal(fasthttp.ListenAndServe(":5000", p.Handler))
+	log.Fatal(fasthttp.ListenAndServe(":8000", r.Handler))
 }

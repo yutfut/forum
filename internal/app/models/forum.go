@@ -1,25 +1,12 @@
 package models
 
-type ForumRequestDelivery struct {
-	Title	string	`json:"title"`
-	User	string	`json:"user"`
-	Slug 	string	`json:"slug"`
-}
-
-type ForumResponse struct {
-	Id      int64 	`json:"-"`
-	Title	string	`json:"title"`
-	User	string	`json:"user"`
-	Slug 	string	`json:"slug"`
-	Posts 	int		`json:"posts"`
-	Threads	int 	`json:"threads"`
-}
-
 type TaskResponse struct {
 	Id 					int			`json:"id"`
 	Name 				string		`json:"name"`
 	Description 		string		`json:"description"`
 	PublicTests 		[]string	`json:"public_tests"`
+	PrivateTests 		[]string	`json:"private_tests"`
+	GeneratedTests 		[]string	`json:"generated_tests"`
 	Difficulty  		string		`json:"difficulty"`
 	CfContestId 		string		`json:"cf_contest_id"`
 	CfIndex   			string		`json:"cf_index"`
@@ -33,4 +20,25 @@ type TaskResponse struct {
 	Input  				string		`json:"input"`
 	Output 				string		`json:"output"`
 	Note 				string		`json:"note"`
+}
+
+type TaskTest struct {
+	PrivateTests 		[]string	`json:"private_tests"`
+}
+
+type SolutionRequest struct {
+	IdTask		int64			`json:"id_task"`
+	Solution	string 		`json:"solution"`
+}
+
+type SourceCode struct {
+	Makefile	string `json:"Makefile"`
+	Main		string `json:"main.c"`
+}
+
+type SolRec struct {
+	SourceCode		SourceCode `json:"sourceCode"`
+	Tests 			[][]string `json:"tests"`
+	BuildTimeout	int `json:"buildTimeout"`
+	TestTimeout 	int `json:"testTimeout"`
 }
