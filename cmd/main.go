@@ -40,9 +40,9 @@ func main() {
 	DBConf := DBConfig{
 		Host: "127.0.0.1",
 		Port: "5432",
-		Username: "docker",
-		Password: "docker",
-		DBName: "docker",
+		Username: "yutfut",
+		Password: "yutfut",
+		DBName: "yutfut",
 	}
 
 	dsn := fmt.Sprintf(`user=%s dbname=%s password=%s host=%s port=%s sslmode=disable`,

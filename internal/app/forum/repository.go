@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/jackc/pgx"
 	"time"
+
+	"math/rand"
 )
 
 type RepoPgx struct {
@@ -168,4 +170,32 @@ func (r *RepoPgx) GetUsers(forum models.ForumResponse, limit, since, desc string
 		users = append(users, user)
 	}
 	return users, nil
+}
+
+func (r *RepoPgx) GetTask() (Task models.TaskResponse, err error) {
+	err = r.DB.QueryRow(
+		`select *
+		from "task"
+		where id = $1;`,
+		rand.Intn(7000 - 0) + 0,
+	).Scan(
+		&Task.Id,
+		&Task.Name,
+		&Task.Description,
+		&Task.PublicTests,
+		&Task.Difficulty,
+		&Task.CfContestId,
+		&Task.CfIndex,
+		&Task.CfPoints,
+		&Task.CfRating,
+		&Task.CfTags,
+		&Task.TimeLimit,
+		&Task.MemoryLimitBytes,
+		&Task.Link,
+		&Task.TaskRu,
+		&Task.Input,
+		&Task.Output,
+		&Task.Note,
+	)
+	return
 }

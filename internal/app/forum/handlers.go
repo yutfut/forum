@@ -206,3 +206,20 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	body, _ := json.Marshal(users)
 	ctx.SetBody(body)
 }
+
+func (h *Handlers) GetTask(ctx *fasthttp.RequestCtx) {
+	task, err := h.ForumRepo.GetTask()
+	if err != nil {
+		ctx.SetContentType("application/json")
+		ctx.SetStatusCode(http.StatusNotFound)
+		//
+		body, _ := easyjson.Marshal(models.MessageError{Message: err.Error()})
+		ctx.SetBody(body)
+		return
+	}
+
+	ctx.SetContentType("application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	body, _ := json.Marshal(task)
+	ctx.SetBody(body)
+}
