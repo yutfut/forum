@@ -36,9 +36,14 @@ type SourceCode struct {
 	Main		string `json:"main.c"`
 }
 
+type Test struct {
+	Input	string
+	Output	string
+}
+
 type SolRec struct {
-	SourceCode		SourceCode `json:"sourceCode"`
-	Tests 			[][]string `json:"tests"`
-	BuildTimeout	int `json:"buildTimeout"`
-	TestTimeout 	int `json:"testTimeout"`
+	SourceCode		SourceCode	`json:"sourceCode"`
+	Tests 			[]Test		`json:"tests"`
+	BuildTimeout	int			`json:"buildTimeout"`
+	TestTimeout 	int			`json:"testTimeout"`
 }

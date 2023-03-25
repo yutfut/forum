@@ -69,6 +69,29 @@ func (h *Handlers) SendSolution(ctx *fasthttp.RequestCtx) {
 	}
 
 	test, err := h.ForumRepo.GetTestByIdTask(body.IdTask)
+	fmt.Println([]test)
+
+	//var che = models.SourceCode{
+	//	Makefile: "solution: main.o\n\tgcc -o solution main.o\nrun: solution\n\t./solution",
+	//	Main: "solution: main.o\n\tgcc -o solution main.o\nrun: solution\n\t./solution"
+	//}
+
+	//a := [["1 2", "3"], ["-2 5","3"], ["10 15", "25"], ["0 0", "0"]]
+
+	//for i := 0; i < len(test); i++ {
+	//
+	//var a = models.Test{
+	//	Input: " ",
+	//	Output: " ",
+	//}
+	//
+	//var requ = models.SolRec {
+	//	SourceCode: che,
+	//	Tests: [["1 2", "3"], ["-2 5","3"], ["10 15", "25"], ["0 0", "0"]],
+	//	BuildTimeout: 10,
+	//	TestTimeout: 10,
+	//}
+
 
 
 
