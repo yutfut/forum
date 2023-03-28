@@ -10,4 +10,6 @@ type ForumRep interface {
 	GetForumThreads(slug, limit, since, desc string) ([]models.ThreadResponse, error)
 	GetThreadsBySlug(slug string) (thread models.ThreadResponse, err error)
 	GetUsers(forum models.ForumResponse, limit, since, desc string) ([]models.User, error)
+	GetData() (Data1 Data, err error)
+	SetData(data DataReq) (data1 Data,err error)
 }

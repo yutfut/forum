@@ -3,6 +3,9 @@ package forum
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
+	"fmt"
+
+	//"github.com/jackc/pgx/pgtype"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -204,5 +207,60 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	ctx.SetContentType("application/json")
 	ctx.SetStatusCode(http.StatusOK)
 	body, _ := json.Marshal(users)
+	ctx.SetBody(body)
+}
+
+func (h *Handlers) GetData(ctx *fasthttp.RequestCtx) {
+	data, err := h.ForumRepo.GetData()
+	if err != nil {
+		ctx.SetContentType("application/json")
+		ctx.SetStatusCode(http.StatusNotFound)
+		//
+		body, _ := easyjson.Marshal(models.MessageError{Message: err.Error()})
+		ctx.SetBody(body)
+		return
+	}
+
+	ctx.SetContentType("application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	body, _ := json.Marshal(data)
+	ctx.SetBody(body)
+}
+
+type DataReq struct {
+	Name	string	`json:"name"`
+	Var1	[]int	`json:"var1"`
+	Var2	[]int	`json:"var2"`
+	Var3	[]int	`json:"var3"`
+}
+
+func (h *Handlers) SetData(ctx *fasthttp.RequestCtx) {
+	data := DataReq{}
+	err := json.Unmarshal(ctx.PostBody(), &data)
+	fmt.Println(err)
+	fmt.Println(data)
+	if err != nil {
+		ctx.SetContentType("application/json")
+		ctx.SetStatusCode(http.StatusNotFound)
+		//
+		body, _ := json.Marshal(models.MessageError{Message: err.Error()})
+		ctx.SetBody(body)
+		return
+	}
+
+	data1 := Data{}
+	data1, err = h.ForumRepo.SetData(data)
+	if err != nil {
+		ctx.SetContentType("application/json")
+		ctx.SetStatusCode(http.StatusNotFound)
+		//
+		body, _ := json.Marshal(models.MessageError{Message: err.Error()})
+		ctx.SetBody(body)
+		return
+	}
+
+	ctx.SetContentType("application/json")
+	ctx.SetStatusCode(http.StatusOK)
+	body, _ := json.Marshal(data1)
 	ctx.SetBody(body)
 }
