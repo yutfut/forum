@@ -17,7 +17,6 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
 		ctx.SetBody(body)
 		return
@@ -28,8 +27,6 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -46,7 +43,6 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 		if err != nil {
 			ctx.SetContentType("application/json")
 			ctx.SetStatusCode(http.StatusNotFound)
-			//
 			body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find User by nickname:"})
 			ctx.SetBody(body)
 			return
@@ -57,7 +53,7 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 			if err != nil {
 				ctx.SetContentType("application/json")
 				ctx.SetStatusCode(http.StatusConflict)
-				//
+				
 				body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Post by Id:"})
 				ctx.SetBody(body)
 				return
@@ -69,8 +65,6 @@ func (h *Handlers) CreatePost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusConflict)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -85,7 +79,6 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
 		ctx.SetBody(body)
 		return
@@ -96,8 +89,6 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -105,7 +96,6 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find user by nickname:"})
 		ctx.SetBody(body)
 		return
@@ -124,8 +114,6 @@ func (h *Handlers) CreateVote(ctx *fasthttp.RequestCtx) {
 		if err != nil {
 			ctx.SetContentType("application/json")
 			ctx.SetStatusCode(http.StatusNotFound)
-			//body, _ := easyjson.Marshal(nil)
-			//ctx.SetBody(body)
 			return
 		}
 
@@ -152,7 +140,6 @@ func (h *Handlers) ThreadDetails(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
 		ctx.SetBody(body)
 		return
@@ -169,7 +156,6 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find Tread by SlugOrId:"})
 		ctx.SetBody(body)
 		return
@@ -196,8 +182,6 @@ func (h *Handlers) ThreadPost(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -223,8 +207,6 @@ func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusBadRequest)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -246,8 +228,6 @@ func (h *Handlers) UpdateThread(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//body, _ := easyjson.Marshal(models.MessageError{Message: "Can't find thread by slug:"})
-		//ctx.SetBody(body)
 		return
 	}
 

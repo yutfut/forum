@@ -17,30 +17,43 @@ func NewPgxRepository(db *pgx.ConnPool) *RepoPgx {
 }
 
 func (r *RepoPgx) CreateForum(newForum models.ForumRequestDelivery) (forum models.ForumResponse, err error) {
+	sql := `insert into "forum" ("title", "user", "slug") values ($1, $2, $3) returning "title", "user", "slug", "posts", "threads";`
 	err = r.DB.QueryRow(
-		`insert into "forum" ("title", "user", "slug")
-		values ($1, $2, $3) 
-		returning "title", "user", "slug", "posts", "threads";`,
-		newForum.Title, newForum.User, newForum.Slug,
-	).Scan(&forum.Title, &forum.User, &forum.Slug, &forum.Posts, &forum.Threads)
+		sql,
+		newForum.Title,
+		newForum.User,
+		newForum.Slug,
+	).Scan(
+		&forum.Title,
+		&forum.User,
+		&forum.Slug,
+		&forum.Posts,
+		&forum.Threads,
+	)
 	return
 }
 
 func (r *RepoPgx) GetForumBySlug(slug string) (forum models.ForumResponse, err error) {
+	sql := `select "id", "title", "user", "slug", "posts", "threads" from "forum" where "slug" = $1;`
 	err = r.DB.QueryRow(
-		`select "id", "title", "user", "slug", "posts", "threads"
-		from "forum"
-		where "slug" = $1;`,
+		sql,
 		slug,
-	).Scan(&forum.Id, &forum.Title, &forum.User, &forum.Slug, &forum.Posts, &forum.Threads)
+	).Scan(
+		&forum.Id,
+		&forum.Title,
+		&forum.User,
+		&forum.Slug,
+		&forum.Posts,
+		&forum.Threads,
+	)
 	return
 }
 
 func (r *RepoPgx) GetThreadsBySlug(slug string) (thread models.ThreadResponse, err error) {
+	sql := `select "id", "title", "author", "forum", "message", "votes", "slug", "created" from "thread" where "slug" = $1;`
+
 	err = r.DB.QueryRow(
-		`select "id", "title", "author", "forum", "message", "votes", "slug", "created"
-		from "thread" 
-		where "slug" = $1;`,
+		sql,
 		slug,
 	).Scan(
 		&thread.Id,
@@ -55,12 +68,16 @@ func (r *RepoPgx) GetThreadsBySlug(slug string) (thread models.ThreadResponse, e
 }
 
 func (r *RepoPgx) GetUserByNickname(nickname string) (user models.User, err error) {
+	sql := `select "nickname", "fullname", "about", "email" from "user" where "nickname" = $1;`
 	err = r.DB.QueryRow(
-		`select "nickname", "fullname", "about", "email"
-		from "user"
-		where "nickname" = $1;`,
+		sql,
 		nickname,
-	).Scan(&user.Nickname, &user.Fullname, &user.About, &user.Email)
+	).Scan(
+		&user.Nickname,
+		&user.Fullname,
+		&user.About,
+		&user.Email,
+	)
 	return
 }
 
@@ -69,11 +86,15 @@ func (r *RepoPgx) CreateThread(newThread models.ThreadsRequest) (thread models.T
 		newThread.Created = time.Now()
 	}
 
+	sql := `insert into "thread" ("title", "author", "forum", "message", "slug", "created") values ($1, $2, $3, $4, $5, $6) returning "id", "title", "author", "forum", "message", "votes", "slug", "created";`
 	err = r.DB.QueryRow(
-		`insert into "thread" ("title", "author", "forum", "message", "slug", "created")
-		values ($1, $2, $3, $4, $5, $6) 
-		returning "id", "title", "author", "forum", "message", "votes", "slug", "created";`,
-		newThread.Title, newThread.Author, newThread.Forum, newThread.Message, newThread.Slug, newThread.Created,
+		sql,
+		newThread.Title,
+		newThread.Author,
+		newThread.Forum,
+		newThread.Message,
+		newThread.Slug,
+		newThread.Created,
 	).Scan(
 		&thread.Id,
 		&thread.Title,
@@ -87,9 +108,7 @@ func (r *RepoPgx) CreateThread(newThread models.ThreadsRequest) (thread models.T
 }
 
 func (r *RepoPgx) GetForumThreads(slug, limit, since, desc string) ([]models.ThreadResponse, error) {
-	query := `select "id", "title", "author", "forum", "message", "votes", "slug", "created" 
-			  from "thread" 
-			  where "forum" = $1`
+	query := `select "id", "title", "author", "forum", "message", "votes", "slug", "created" from "thread" where "forum" = $1`
 	if since != "" {
 		sign := ">="
 		if desc == "desc" {
@@ -131,14 +150,7 @@ func (r *RepoPgx) GetForumThreads(slug, limit, since, desc string) ([]models.Thr
 func (r *RepoPgx) GetUsers(forum models.ForumResponse, limit, since, desc string) ([]models.User, error) {
 	users := make([]models.User, 0)
 
-	query := `select "nickname", "about", "email", "fullname" 
-			  from "user"
-			  where "id"
-			  in (
-				select "user" 
-				from "forum_user" 
-				where forum = $1
-			  )`
+	query := `select "nickname", "about", "email", "fullname" from "user" where "id" in (select "user" from "forum_user" where forum = $1)`
 	if since != "" {
 		sign := ">"
 		if desc == "desc" {
@@ -170,6 +182,8 @@ func (r *RepoPgx) GetUsers(forum models.ForumResponse, limit, since, desc string
 	}
 	return users, nil
 }
+
+// Method MPPR
 
 type Data struct {
 	Id		int					`db:"id"`

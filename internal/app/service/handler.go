@@ -15,8 +15,6 @@ func (h *Handlers) ServiceStatus(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusOK)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -30,12 +28,8 @@ func (h *Handlers) ServiceClear(ctx *fasthttp.RequestCtx) {
 	if err := h.ServiceRepo.Clear(); err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusInternalServerError)
-		//body, _ := easyjson.Marshal(nil)
-		//ctx.SetBody(body)
 	}
 
 	ctx.SetContentType("application/json")
 	ctx.SetStatusCode(http.StatusOK)
-	//body, _ := easyjson.Marshal(nil)
-	//ctx.SetBody(body)
 }

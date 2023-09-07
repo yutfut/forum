@@ -26,16 +26,8 @@ type DBConfig struct {
 func main() {
 	r := router.New()
 
-	//added
 	p := fasthttpprom.NewPrometheus("")
 	p.Use(r)
-
-	//r.GET("/health", func(ctx *fasthttp.RequestCtx) {
-	//	ctx.SetStatusCode(200)
-	//	ctx.SetBody([]byte(`{"status": "pass"}`))
-	//	log.Println(string(ctx.Request.URI().Path()))
-	//})
-	//
 
 	DBConf := DBConfig{
 		Host: "127.0.0.1",
@@ -88,6 +80,5 @@ func main() {
 	})
 	fmt.Printf("Start server on port :5000")
 
-	//log.Fatal(fasthttp.ListenAndServe(":5000", r.Handler))
 	log.Fatal(fasthttp.ListenAndServe(":5000", p.Handler))
 }

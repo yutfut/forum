@@ -14,22 +14,21 @@ func NewPgxRepository(db *pgx.ConnPool) *RepoPgx {
 }
 
 func (r *RepoPgx) GetPost(id int, related []string) (postInfo models.PostInfo, err error) {
-	var post models.PostResponse
+	post := models.PostResponse{}
+	sql := `select "id", "parent", "author", "message", "isEdited", "forum", "thread", "created" from "post" where "id" = $1;`
 	err = r.DB.QueryRow(
-		`select "id", "parent", "author", "message", "isEdited", "forum", "thread", "created"
-		from "post" 
-		where "id" = $1;`,
+		sql,
 		id,
-		).Scan(
-			&post.Id,
-			&post.Parent,
-			&post.Author,
-			&post.Message,
-			&post.IsEdited,
-			&post.Forum,
-			&post.Thread,
-			&post.Created,
-		)
+	).Scan(
+		&post.Id,
+		&post.Parent,
+		&post.Author,
+		&post.Message,
+		&post.IsEdited,
+		&post.Forum,
+		&post.Thread,
+		&post.Created,
+	)
 	if err != nil {
 		return
 	}
@@ -41,10 +40,9 @@ func (r *RepoPgx) GetPost(id int, related []string) (postInfo models.PostInfo, e
 			switch q {
 			case "user":
 				var user models.User
+				sql := `select "nickname", "fullname", "about", "email" from "user" where "nickname" = $1;`
 				err = r.DB.QueryRow(
-					`select "nickname", "fullname", "about", "email"
-					from "user" 
-					where "nickname" = $1;`,
+					sql,
 					post.Author,
 					).Scan(
 						&user.Nickname,
@@ -58,10 +56,9 @@ func (r *RepoPgx) GetPost(id int, related []string) (postInfo models.PostInfo, e
 				postInfo.Author = &user
 			case "forum":
 				var forum models.ForumResponse
+				sql := `select "title", "user", "slug", "posts", "threads" from "forum" where "slug" = $1;`
 				err = r.DB.QueryRow(
-					`select "title", "user", "slug", "posts", "threads"
-					from "forum" 
-					where "slug" = $1;`,
+					sql,
 					post.Forum,
 					).Scan(
 						&forum.Title,
@@ -76,10 +73,9 @@ func (r *RepoPgx) GetPost(id int, related []string) (postInfo models.PostInfo, e
 				postInfo.Forum = &forum
 			case "thread":
 				var thread models.ThreadResponse
+				sql := `select "id", "title", "author", "forum", "message", "votes", "slug", "created" from "thread" where "id" = $1;`
 				err = r.DB.QueryRow(
-					`select "id", "title", "author", "forum", "message", "votes", "slug", "created"
-					from "thread" 
-					where "id" = $1;`,
+					sql,
 					post.Thread,
 					).Scan(
 						&thread.Id,
@@ -105,21 +101,20 @@ func (r *RepoPgx) GetPost(id int, related []string) (postInfo models.PostInfo, e
 }
 
 func (r *RepoPgx) UpdatePost(id int, newPost models.UpdatePostRequest) (post models.PostResponse, err error) {
+	sql := `select "title", "user", "slug", "posts", "threads" from "forum" where "slug" = $1;`
 	err = r.DB.QueryRow(
-		`update "post" 
-			set "message" = $1, "isEdited" = true
-			where "id" = $2
-			returning "id", "parent", "author", "message", "isEdited", "forum", "thread", "created";`,
-			newPost.Message, id,
-			).Scan(
-				&post.Id,
-				&post.Parent,
-				&post.Author,
-				&post.Message,
-				&post.IsEdited,
-				&post.Forum,
-				&post.Thread,
-				&post.Created,
-			)
+		sql,
+		newPost.Message,
+		id,
+	).Scan(
+		&post.Id,
+		&post.Parent,
+		&post.Author,
+		&post.Message,
+		&post.IsEdited,
+		&post.Forum,
+		&post.Thread,
+		&post.Created,
+	)
 	return
 }

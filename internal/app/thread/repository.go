@@ -23,7 +23,8 @@ func (r *RepoPgx) GetForumThreadBySlugOrId(slug string) (thread models.ThreadRes
 		`select "id", "title", "author", "forum", "message", "votes", "slug", "created" 
 			from "thread" 
 			where "slug" = $1 or "id" = $2;`,
-		slug, id,
+		slug, 
+		id,
 	).Scan(
 		&thread.Id,
 		&thread.Title,
@@ -40,12 +41,12 @@ func (r *RepoPgx) GetForumThreadBySlugOrId(slug string) (thread models.ThreadRes
 func (r *RepoPgx) CheckPostAuthor(author string) (err error) {
 	err = r.DB.QueryRow(
 		`select "nickname" 
-			from "user"
-			where "nickname" = $1;`,
-			author,
-			).Scan(
-				&author,
-			)
+		from "user"
+		where "nickname" = $1;`,
+		author,
+	).Scan(
+		&author,
+	)
 	return
 }
 

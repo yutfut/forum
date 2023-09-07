@@ -3,9 +3,7 @@ package forum
 import (
 	"encoding/json"
 	"example.com/greetings/internal/app/models"
-	"fmt"
 
-	//"github.com/jackc/pgx/pgtype"
 	"github.com/mailru/easyjson"
 	"github.com/valyala/fasthttp"
 	"net/http"
@@ -38,7 +36,6 @@ func (h *Handlers) CreateForum(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: ""})
 		ctx.SetBody(body)
 		return
@@ -64,7 +61,6 @@ func (h *Handlers) GetForumDetails(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: ""})
 		ctx.SetBody(body)
 		return
@@ -81,7 +77,6 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: ""})
 		ctx.SetBody(body)
 		return
@@ -112,7 +107,6 @@ func (h *Handlers) CreateThread(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: ""})
 		ctx.SetBody(body)
 		return
@@ -138,7 +132,6 @@ func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: ""})
 		ctx.SetBody(body)
 		return
@@ -160,8 +153,6 @@ func (h *Handlers) GetForumThreads(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//body, _ := easyjson.Marshal(models.MessageError{Message: ""})
-		//ctx.SetBody(body)
 		return
 	}
 
@@ -176,7 +167,6 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: ""})
 		ctx.SetBody(body)
 		return
@@ -210,12 +200,12 @@ func (h *Handlers) ForumUsers(ctx *fasthttp.RequestCtx) {
 	ctx.SetBody(body)
 }
 
+// Metgod MPPR
 func (h *Handlers) GetData(ctx *fasthttp.RequestCtx) {
 	data, err := h.ForumRepo.GetData()
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := easyjson.Marshal(models.MessageError{Message: err.Error()})
 		ctx.SetBody(body)
 		return
@@ -237,12 +227,9 @@ type DataReq struct {
 func (h *Handlers) SetData(ctx *fasthttp.RequestCtx) {
 	data := DataReq{}
 	err := json.Unmarshal(ctx.PostBody(), &data)
-	fmt.Println(err)
-	fmt.Println(data)
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := json.Marshal(models.MessageError{Message: err.Error()})
 		ctx.SetBody(body)
 		return
@@ -253,7 +240,6 @@ func (h *Handlers) SetData(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		ctx.SetContentType("application/json")
 		ctx.SetStatusCode(http.StatusNotFound)
-		//
 		body, _ := json.Marshal(models.MessageError{Message: err.Error()})
 		ctx.SetBody(body)
 		return
